@@ -1,1 +1,25 @@
+If you would like to create an app for the v5 market; here are the requirements:
 
+- Application title (must not exceed 18 chars)
+- Application description
+- A square icon for the application (1080x1080)
+- An application color (matches the main color of your icon)
+- Application font color (must look good on top of application color)
+- Price (funds: can range from 0 to whatever)
+* Download apk.zip to begin
+
+
+NOTE: Misdew will deduct 30% of each sale. If your app is priced at 1.00 MDF, you will receive 0.70 MDF in Misdew Funds, and we will take the remaining 0.30 MDF.
+
+
+
+Misdew Funds (MDF) has NOTHING to do with real money.
+
+
+
+  __  __ _____        _____
+ |  \/  |  __ \      | ____|
+ | \  / | |  | |_   _| |__
+ | |\/| | |  | \ \ / /___ \
+ | |  | | |__| |\ V / ___) |
+ |_|  |_|_____/  \_/ |____/  Join us. The hype is real.
