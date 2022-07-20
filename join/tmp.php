@@ -4,9 +4,6 @@ if($logged_in == true) {
   header("location: /");
   exit();
 }
-$mdds_tstamp = time();
-$mdds_loc = "reg misdew join";
-mysqli_query($conx, "INSERT INTO mdds (tstamp, location) VALUES ('$mdds_tstamp','$mdds_loc')");
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,10 +57,7 @@ mysqli_query($conx, "INSERT INTO mdds (tstamp, location) VALUES ('$mdds_tstamp',
     }
     session_destroy();
     ?>
-    <span style="color: #888; font-size: 12px; font-family: 'Dosis', sans-serif;">By joining, you are agreeing to our <a href="/privacy-policy.html" target="_blank" style="color: #888;">privacy policy.</a></span> <br>
-    <span style="color: #888; font-size: 12px; font-family: 'Dosis', sans-serif;">You will be asked to verify your email address to use Misdew.</span><br>
-    <span style="color: #888; font-size: 12px; font-family: 'Dosis', sans-serif;">Please note that passwords and emails are case sensitive.</span> <br>
-    <span style="color: #888; font-size: 12px; font-family: 'Dosis', sans-serif;">If you experience any issues or need help, email: <b>me@justa.us</b></span> <br><br>
+    <span style="color: #888; font-size: 12px; font-family: 'Dosis', sans-serif;">By joining, you are agreeing to our <a href="/privacy-policy.html" target="_blank" style="color: #888;">privacy policy.</a></span> <br><br>
     <form action="join.php" method="post" autocomplete="off">
       <table class="form_tble">
         <tr>
@@ -96,14 +90,10 @@ mysqli_query($conx, "INSERT INTO mdds (tstamp, location) VALUES ('$mdds_tstamp',
     <table class="form_btap" onclick="window.location='/';">
       <tr>
         <td>
-          <span style="font-size: 20px !important;">tap to login</span>
+          tap to login
         </td>
       </tr>
     </table> <br>
-    <div style="font-size: 13px; text-align: left; width: 95%; max-width: 500px; color: #808080; font-family: 'Dosis', sans-serif; padding-bottom: 10px;">
-      <span style="font-size: 25px; font-weight: bold;">What is Misdew?</span> <br>
-      We are a small social network with a relaxed community. We appreciate each and every one of our members. If you haven't already signed up for an account, why not give us a try?<br><br>Members have access to a variety of apps: Canvas [user profiles], Feed [public status], Chat [public chatroom], Mail [private messaging], Draw [create and share drawings], Cloud [uploading files], Alerts [site notifications], and Settings [alter site experience and security options].
-    </div>
     <div style="font-size: 13px; text-align: left; width: 95%; max-width: 500px; color: #808080; font-family: 'Dosis', sans-serif; padding-bottom: 10px;">
       <span style="font-size: 25px; font-weight: bold;">Feed</span> <br>
       This is an area where our members can post about anything that they desire. We enable others with the options to like, dislike, or comment on a post. Two of our most recent posts are below.
