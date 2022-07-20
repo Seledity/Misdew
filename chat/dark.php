@@ -5,10 +5,6 @@ if($logged_in == false) {
   header("location: /");
   exit();
 }
-if($u_chatdark_def == 'yes'){
-  header("location: /chat/dark.php");
-  exit();
-}
 /*
 if($u_vplus == 'no'){
   header("location: /");
@@ -35,7 +31,7 @@ if($u_siteloc != '/chat') {
   <meta name="keywords" content="Misdew, MD, Social, Network, Communication, 3DS, DSi, Nintendo">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google" value="notranslate">
-  <meta name="theme-color" content="<?php echo $meta_theme_color; ?>">
+  <meta name="theme-color" content="#000">
   <?php
   if($css_type == "sheet") {
     echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$g_sheet\">";
@@ -48,17 +44,25 @@ if($u_siteloc != '/chat') {
   <link rel="icon" type="image/png" href="/img/favicon.png">
   <link rel="apple-touch-icon" href="/img/logo.png">
   <style type="text/css">
-  #mdLink {
-    color: #fff !important;
-  }
+  ::-webkit-input-placeholder {
+  color: #333333;
+}
+:-moz-placeholder {
+  color: #333333;
+  opacity: 1;
+}
+::-moz-placeholder {
+  color: #333333;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  color: #333333;
+}
+#mdLink {
+  color: #333 !important;
+}
   body {
-    background-color: <?php echo $bgcolor; ?>;
-  }
-  #header_tds {
-    color: <?php echo $tdcolor; ?> !important;
-  }
-  #vPath {
-    color: #fff !important;
+    background-color: #000 !important;
   }
   .header {
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 4px 4px rgba(0,0,0,0.23);
@@ -66,6 +70,58 @@ if($u_siteloc != '/chat') {
   form {
     display: inline;
 }
+  #vPath {
+    color: #333;
+  }
+  #fPath {
+    color: #333;
+  }
+  #color_go {
+    color: #b2b2b2;
+  }
+  #color_slow {
+    color: #7f7f7f;
+  }
+  #color_dead {
+    color: #4c4c4c;
+  }
+  .header {
+    background-color: #000 !important;
+    border-bottom: 1px solid #333333;
+  }
+  #header_tds {
+    color: #333333 !important;
+  }
+  .chatd_send {
+    background-color: #000 !important;
+    border: 1px solid #333333;
+  }
+  .chat_input {
+    background-color: #000 !important;
+    color: #7f7f7f !important;
+  }
+  .chat_btn {
+    background-color: #000 !important;
+    color: #4c4c4c !important;
+    border: 1px solid #4c4c4c !important;
+  }
+  #chat {
+    background-color: #000 !important;
+    border: 1px solid #333333;
+  }
+  #show {
+    background-color: #000 !important;
+    border: 1px solid #333333;
+  }
+  .online_list {
+    color: #7f7f7f !important;
+  }
+  .onl_username {
+    color: #7f7f7f !important;
+  }
+  .darkmd {
+    color: #7f7f7f !important;
+  }
   </style>
 </head>
 <body onload="goOnline()">
@@ -74,7 +130,7 @@ if($u_siteloc != '/chat') {
     $back_button = true;
     $linebreak = true;
     $alerts = true;
-    require_once("../inc/header.php");
+    require_once("../inc/header-dark.php");
     ?>
     <?php
     echo "<div id=\"csplit_hidden\" style=\"display: none;\"><div id=\"cspl_update\">";
@@ -167,9 +223,9 @@ if($u_siteloc != '/chat') {
     }
     echo "</div></div>";
     ?>
-    <div id="regchat" class="chatd_send" style="display: visible; border-top-left-radius: 1em; border-top-right-radius: 1em;">
+    <div id="regchat" class="chatd_send" style="display: visible; border-top-right-radius: 1em; border-top-left-radius: 1em;">
       <form id="chats_form" name="chats_form" autocomplete="off">
-        <span class="noselect"><i onclick="stopTyping();moreOnlineL('show');goOnline();" class="fa fa-plus" aria-hidden="true" id="chat_more"></i></span>
+        <span class="noselect"><i onclick="stopTyping();moreOnlineL('show');goOnline();" class="fa fa-plus" aria-hidden="true" id="chat_more" style="color: #4c4c4c;"></i></span>
         <input onkeypress="isTyping();" onkeyup="isTyping();" name="msg" id="result" class="chat_input" type="text" placeholder="type something..." style="width: 65%;">
         <!--<span id="loader"><i onclick="selectFile();" id="fPath" class="fa fa-paperclip fa-lg" aria-hidden="true"></i></span> &nbsp;
         <span id="vloader"><i onclick="var log_conf=confirm('Upload a video? \n MP4 Files Only');if(log_conf == true){selectVid();};" id="vPath" class="fa fa-film" aria-hidden="true" style="color: #fff;"></i></span>-->
@@ -179,11 +235,11 @@ if($u_siteloc != '/chat') {
       </form>
     </div>
     <div id="pmchat" class="chatd_send" style="display: none;">
-      <div style="font-family: 'Dosis', sans-serif; text-align: left; color: #fff; font-size: 12px; font-weight: bold;">
+      <div style="font-family: 'Dosis', sans-serif; text-align: left; color: #4c4c4c; font-size: 12px; font-weight: bold;">
         <?php echo $u_username; ?> <i class="fa fa-arrow-right"></i> <span id="pmuser"></span>
       </div>
       <form id="pmchats_form" name="pmchats_form" autocomplete="off">
-        <span onclick="backRegChat();"><i class="fa fa-envelope" aria-hidden="true" style="color: #fff;"></i></span>
+        <span onclick="backRegChat();"><i class="fa fa-envelope" aria-hidden="true" style="color: #4c4c4c;"></i></span>
         <input name="pmmsg" id="pmresult" class="chat_input" type="text" placeholder="write a pm..." style="width: 60%;">
         <input type="text" name="pmu" id="pmu" value="" style="display: none;">
         <button class="chat_btn" type="submit" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);">
@@ -193,10 +249,10 @@ if($u_siteloc != '/chat') {
     </div>
     <div id="show" class="chat_dismore" style="display: none;">
         <center style="padding-bottom: 10px;">
-          <button onclick="window.location='dark.php';" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
+          <button onclick="window.location='/chat';" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
             <i class="fa fa-paint-brush" aria-hidden="true"></i>
           </button>
-          <button onclick="window.location='telegram.php';" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
+          <button onclick="alert('Attach files from your cloud soon.');" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
             <i class="fa fa-cloud" aria-hidden="true"></i>
           </button>
           <form id="imgUpl" name="imgUpl" action="img_upload.php" enctype="multipart/form-data" method="post">
@@ -205,7 +261,7 @@ if($u_siteloc != '/chat') {
               <span id="loader"><i class="fa fa-image" aria-hidden="true"></i></span>
             </button>
           </form>
-          <button onclick="var log_conf=confirm('Upload a video? \n MP4, MOV, and WEBM Files Only');if(log_conf == true){selectVid();};" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
+          <button onclick="var log_conf=confirm('Upload a video? \n MP4 Files Only');if(log_conf == true){selectVid();};" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
             <span id="vloader"><i class="fa fa-film" aria-hidden="true"></i></span>
           </button>
           <button onclick="moreOnlineL('show');moreX('sticker_bar');moreX('sticker_bar_xtra');" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
@@ -214,18 +270,18 @@ if($u_siteloc != '/chat') {
         </center>
         <div id="online">
         <span class="online_list">
-          <?php require("online.php"); ?>
+          <?php require("online-dark.php"); ?>
       </div>
         </span>
       <form id="vidUpl" action="vid_upload.php" enctype="multipart/form-data" method="post">
         <input id="vBrowse" name="vid" type="file" style="display: none;">
       </form>
     </div>
-    <div style="font-size: 8px; max-width: 500px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
+    <div style="font-size: 8px; max-width: 500px;width: 95%; background-color: #333333; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
     &nbsp;
     </div>
 
-    <div id="sticker_bar" style="display: none; overflow: scroll; font-size: 12px; max-width: 500px;width: 95%; background-color: #fff; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
+    <div id="sticker_bar" style="display: none; overflow: scroll; font-size: 12px; max-width: 500px;width: 95%; background-color: #000; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
       <nobr>
         <img onclick="sendSticky('pepe');" src="/img/stickers/pepe.png" alt="" style="height: 40px; width: auto;">
         <img onclick="sendSticky('pepe-punch');" src="/img/stickers/pepe-punch.png" alt="" style="height: 40px; width: auto;">
@@ -248,11 +304,11 @@ if($u_siteloc != '/chat') {
         <img onclick="sendSticky('easter-gif');" src="/img/stickers/easter-gif.gif" alt="" style="height: 40px; width: auto;">
       </nobr>
     </div>
-    <div id="sticker_bar_xtra" style="display: none; font-size: 8px; max-width: 500px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
+    <div id="sticker_bar_xtra" style="display: none; font-size: 8px; max-width: 500px;width: 95%; background-color: #333333; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
     &nbsp;
     </div>
-    <div id="chat" style="box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); border-bottom-right-radius: 1em; border-bottom-left-radius: 1em;">
-      <?php require("messages.php"); ?>
+    <div id="chat" style="box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); border-bottom-left-radius: 1em; border-bottom-right-radius: 1em;">
+      <?php require("messages-dark.php"); ?>
     </div>
     <div id="typingstop" style="display: none"></div>
       <script src="https://misdew.com/jquery.min.js"></script>
@@ -459,13 +515,13 @@ if($u_siteloc != '/chat') {
         document.getElementById('vPath').value = document.getElementById('vBrowse').value;
       }
       function upChat() {
-        $.get("messages.php", function(d) {
+        $.get("messages-dark.php", function(d) {
           $("#chat").html(d);
         });
       }
       setInterval('upChat()', 3000);
       function upOnline() {
-        $.get("online.php", function(d) {
+        $.get("online-dark.php", function(d) {
           $("#online").html(d);
         });
       }

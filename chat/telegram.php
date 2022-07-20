@@ -196,7 +196,7 @@ if($u_siteloc != '/chat') {
           <button onclick="window.location='dark.php';" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
             <i class="fa fa-paint-brush" aria-hidden="true"></i>
           </button>
-          <button onclick="window.location='telegram.php';" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
+          <button onclick="alert('Attach files from your cloud soon.');" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
             <i class="fa fa-cloud" aria-hidden="true"></i>
           </button>
           <form id="imgUpl" name="imgUpl" action="img_upload.php" enctype="multipart/form-data" method="post">
@@ -205,7 +205,7 @@ if($u_siteloc != '/chat') {
               <span id="loader"><i class="fa fa-image" aria-hidden="true"></i></span>
             </button>
           </form>
-          <button onclick="var log_conf=confirm('Upload a video? \n MP4, MOV, and WEBM Files Only');if(log_conf == true){selectVid();};" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
+          <button onclick="var log_conf=confirm('Upload a video? \n MP4 Files Only');if(log_conf == true){selectVid();};" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
             <span id="vloader"><i class="fa fa-film" aria-hidden="true"></i></span>
           </button>
           <button onclick="moreOnlineL('show');moreX('sticker_bar');moreX('sticker_bar_xtra');" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
@@ -474,7 +474,7 @@ if($u_siteloc != '/chat') {
         e.preventDefault();
         if($("input[name=msg]").val().trim() == "")
         return;
-        $.post("send.php", {body: $("input[name=msg]").val(), submit: "send"}, function(data) {
+        $.post("telegram-send.php", {body: $("input[name=msg]").val(), submit: "send"}, function(data) {
           if(data != '') {
             upChat();
             //stopTyping();

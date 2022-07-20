@@ -9,12 +9,6 @@ if($u_chatdark_def == 'yes'){
   header("location: /chat/dark.php");
   exit();
 }
-/*
-if($u_vplus == 'no'){
-  header("location: /");
-  exit();
-}
-*/
 // update online time
 mysqli_query($conx, "UPDATE accounts SET chat_time='$tstamp' WHERE uid='$u_uid'");
 #   #   #   #   #   #   #
@@ -25,11 +19,17 @@ if($u_siteloc != '/chat') {
   mysqli_query($conx, "UPDATE accounts SET site_locdesc='$loc_desc' WHERE uid='$u_uid'");
   mysqli_query($conx, "UPDATE accounts SET site_locurl='/chat' WHERE uid='$u_uid'");
 }
+if($chat_dark == 'yes') {
+  $darkdidbuy = "switch to";
+}
+else {
+  $darkdidbuy = "buy";
+}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chat+ | Misdew.com</title>
+  <title>Chat - Misdew</title>
   <meta charset="utf-8">
   <meta name="description" content="We are a fairly cool social network.">
   <meta name="keywords" content="Misdew, MD, Social, Network, Communication, 3DS, DSi, Nintendo">
@@ -60,12 +60,6 @@ if($u_siteloc != '/chat') {
   #vPath {
     color: #fff !important;
   }
-  .header {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 4px 4px rgba(0,0,0,0.23);
-  }
-  form {
-    display: inline;
-}
   </style>
 </head>
 <body onload="goOnline()">
@@ -74,15 +68,15 @@ if($u_siteloc != '/chat') {
     $back_button = true;
     $linebreak = true;
     $alerts = true;
-    require_once("../inc/header.php");
+    require_once("../inc/header-wide.php");
     ?>
     <?php
     echo "<div id=\"csplit_hidden\" style=\"display: none;\"><div id=\"cspl_update\">";
     if($u_csplown == 'yes' && $u_csplit == 'on') {
-      echo "<div id=\"cspl_upd\" style=\"width: 95%; max-width: 500px;\">
+      echo "<div id=\"cspl_upd\" style=\"width: 80%; max-width: 350px;\">
         no changes detected
       </div>
-      <table class=\"cspl_table\" style=\"width: 95%; max-width: 500px;\">
+      <table class=\"cspl_table\">
         <tr>
           <td class=\"cspl_title\">
             cSplit Configuration
@@ -113,7 +107,7 @@ if($u_siteloc != '/chat') {
           </td>
         </tr>
       </table>
-      <table class=\"cspl_table\" style=\"padding-bottom: 4px; width: 95%; max-width: 500px;\">
+      <table class=\"cspl_table\" style=\"padding-bottom: 4px;\">
         <tr>
           <td onclick=\"updcSpl();\">
             <div class=\"cspl_upd\">Update</div>
@@ -167,166 +161,38 @@ if($u_siteloc != '/chat') {
     }
     echo "</div></div>";
     ?>
-    <div id="regchat" class="chatd_send" style="display: visible; border-top-left-radius: 1em; border-top-right-radius: 1em;">
-      <form id="chats_form" name="chats_form" autocomplete="off">
-        <span class="noselect"><i onclick="stopTyping();moreOnlineL('show');goOnline();" class="fa fa-plus" aria-hidden="true" id="chat_more"></i></span>
-        <input onkeypress="isTyping();" onkeyup="isTyping();" name="msg" id="result" class="chat_input" type="text" placeholder="type something..." style="width: 65%;">
-        <!--<span id="loader"><i onclick="selectFile();" id="fPath" class="fa fa-paperclip fa-lg" aria-hidden="true"></i></span> &nbsp;
-        <span id="vloader"><i onclick="var log_conf=confirm('Upload a video? \n MP4 Files Only');if(log_conf == true){selectVid();};" id="vPath" class="fa fa-film" aria-hidden="true" style="color: #fff;"></i></span>-->
-        <button class="chat_btn" type="submit" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);">
-        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-        </button>
+    <div class="chatd_send" style="max-width: 1200px !important;">
+      <form id="chats_form" autocomplete="off">
+        <span class="noselect"><i onclick="more('show');goOnline();" class="fa fa-plus" aria-hidden="true" id="chat_more"></i></span>
+        <input name="msg" id="result" class="chat_input" type="text" placeholder="type something..." style="width: 70%;">
+        <span id="loader"><i onclick="selectFile();" id="fPath" class="fa fa-paperclip fa-lg" aria-hidden="true"></i></span> &nbsp;
+        <span id="vloader"><i onclick="var log_conf=confirm('Upload a video? \n MP4 Files Only');if(log_conf == true){selectVid();};" id="vPath" class="fa fa-film" aria-hidden="true" style="color: #fff;"></i></span>
+        <input class="chat_btn" type="submit" value="send">
       </form>
     </div>
-    <div id="pmchat" class="chatd_send" style="display: none;">
-      <div style="font-family: 'Dosis', sans-serif; text-align: left; color: #fff; font-size: 12px; font-weight: bold;">
-        <?php echo $u_username; ?> <i class="fa fa-arrow-right"></i> <span id="pmuser"></span>
-      </div>
-      <form id="pmchats_form" name="pmchats_form" autocomplete="off">
-        <span onclick="backRegChat();"><i class="fa fa-envelope" aria-hidden="true" style="color: #fff;"></i></span>
-        <input name="pmmsg" id="pmresult" class="chat_input" type="text" placeholder="write a pm..." style="width: 60%;">
-        <input type="text" name="pmu" id="pmu" value="" style="display: none;">
-        <button class="chat_btn" type="submit" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);">
-        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-        </button>
-      </form>
-    </div>
-    <div id="show" class="chat_dismore" style="display: none;">
-        <center style="padding-bottom: 10px;">
-          <button onclick="window.location='dark.php';" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
-            <i class="fa fa-paint-brush" aria-hidden="true"></i>
-          </button>
-          <button onclick="window.location='telegram.php';" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
-            <i class="fa fa-cloud" aria-hidden="true"></i>
-          </button>
-          <form id="imgUpl" name="imgUpl" action="img_upload.php" enctype="multipart/form-data" method="post">
-            <input id="fBrowse" name="img" type="file" style="display: none;">
-            <button type="button" onclick="selectFile();" id="fPath" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
-              <span id="loader"><i class="fa fa-image" aria-hidden="true"></i></span>
-            </button>
-          </form>
-          <button onclick="var log_conf=confirm('Upload a video? \n MP4, MOV, and WEBM Files Only');if(log_conf == true){selectVid();};" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
-            <span id="vloader"><i class="fa fa-film" aria-hidden="true"></i></span>
-          </button>
-          <button onclick="moreOnlineL('show');moreX('sticker_bar');moreX('sticker_bar_xtra');" class="chat_btn" style="box-shadow: 0 1px 20px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);border: none;">
-            <i class="fa fa-sticky-note" aria-hidden="true"></i>
-          </button> <br>
-        </center>
+    <div id="show" class="chat_dismore" style="display: none; max-width: 1200px;">
+      <form id="imgUpl" action="img_upload.php" enctype="multipart/form-data" method="post">
+        <input id="fBrowse" name="img" type="file" style="display: none;">
         <div id="online">
         <span class="online_list">
           <?php require("online.php"); ?>
       </div>
         </span>
+      </form>
       <form id="vidUpl" action="vid_upload.php" enctype="multipart/form-data" method="post">
         <input id="vBrowse" name="vid" type="file" style="display: none;">
       </form>
+      <center onclick="window.location='dark.php';" style="font-size: 12px; font-weight: bold;">Tap here to <?php echo $darkdidbuy; ?> Dark Mode.</center>
+      <br><center onclick="fullscmode();" style="font-size: 12px; font-weight: bold;">Tap here to enter Full Screen.</center>
     </div>
-    <div style="font-size: 8px; max-width: 500px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
+    <div style="font-size: 8px; max-width: 1200px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
     &nbsp;
     </div>
-
-    <div id="sticker_bar" style="display: none; overflow: scroll; font-size: 12px; max-width: 500px;width: 95%; background-color: #fff; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
-      <nobr>
-        <img onclick="sendSticky('pepe');" src="/img/stickers/pepe.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-punch');" src="/img/stickers/pepe-punch.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-gun1');" src="/img/stickers/pepe-gun1.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-mk');" src="/img/stickers/pepe-mk.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-sad1');" src="/img/stickers/pepe-sad1.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-weetawd');" src="/img/stickers/pepe-weetawd.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-HAHA');" src="/img/stickers/pepe-HAHA.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-eyes');" src="/img/stickers/pepe-eyes.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-k');" src="/img/stickers/pepe-k.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('pepe-grog');" src="/img/stickers/pepe-grog.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('withered');" src="/img/stickers/withered.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('wojak');" src="/img/stickers/wojak.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('lock');" src="/img/stickers/lock.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('roblock');" src="/img/stickers/roblock.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('easter-pepe');" src="/img/stickers/easter-pepe.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('ricardo-smile');" src="/img/stickers/ricardo-smile.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('ricardo');" src="/img/stickers/ricardo.png" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('cow-gif');" src="/img/stickers/yak.gif" alt="" style="height: 40px; width: auto;">
-        <img onclick="sendSticky('easter-gif');" src="/img/stickers/easter-gif.gif" alt="" style="height: 40px; width: auto;">
-      </nobr>
-    </div>
-    <div id="sticker_bar_xtra" style="display: none; font-size: 8px; max-width: 500px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
-    &nbsp;
-    </div>
-    <div id="chat" style="box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); border-bottom-right-radius: 1em; border-bottom-left-radius: 1em;">
+    <div id="chat" style="max-width: 1200px !important;">
       <?php require("messages.php"); ?>
     </div>
-    <div id="typingstop" style="display: none"></div>
-      <script src="https://misdew.com/jquery.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
       <script>
-      function attack(u,a,c) {
-        var username = u;
-        var attack_type = a;
-        var mdf_cost = c;
-        var token = "<?php echo $u_token; ?>";
-        var msg = attack_type + " " + username + "? [-" + mdf_cost + " MDF]";
-        if(confirm(msg)) {
-          $.ajax({
-          url: 'attack.php',
-          type: 'POST',
-          data: { u: u, token: token, a: a },
-          });
-        }
-      }
-      function writePM(u) {
-        var msg = "Write PMs with " + u + "?";
-        //if(confirm(msg)) {
-          $("#pmu").val(u);
-          document.getElementById("pmresult").placeholder = "write a pm to " + u + "...";
-          document.getElementById('pmuser').innerHTML = u;
-          $("#regchat").slideUp(500);
-          $("#pmchat").slideDown(500);
-          window.scrollTo(0, 0);
-        //}
-      }
-      function backRegChat(u) {
-        //var msg = "Return to regular Chat?";
-        //if(confirm(msg)) {
-          $("#pmchat").slideUp(500);
-          $("#regchat").slideDown(500);
-          document.getElementById('pmuser').innerHTML = "";
-          document.getElementById("pmresult").placeholder = "write a pm...";
-        //}
-      }
-      function moreOnlineL(id) {
-        var e = document.getElementById(id);
-        if(e.style.display == '') {
-          $("#show").slideUp(500);
-          document.getElementById('chat_more').className = "fa fa-plus";
-        }
-        else {
-          $("#show").slideDown(500);
-          e.style.display = '';
-          document.getElementById('chat_more').className = "fa fa-times";
-        }
-      }
-      function chatSubmit() {
-        document.getElementsByName("chats_form")[0].submit();
-      }
-      function isTyping() {
-        //var token = "<?php echo $u_token; ?>";
-        //var typing = "yes";
-          //$.ajax({
-          //url: 'typing.php',
-          //type: 'POST',
-          //data: { token: token, typing: typing },
-          //});
-      }
-      function sendSticky(i) {
-        var token = "<?php echo $u_token; ?>";
-        var msg = "Send the " + i + " sticker?";
-        if(confirm(msg)) {
-          $.ajax({
-          url: 'send_sticky.php',
-          type: 'POST',
-          data: { stickyid: i, token: token },
-          });
-        }
-        upChat();
-      }
       function fullscmode() {
       addEventListener("click", function() {
           var
@@ -340,7 +206,6 @@ if($u_siteloc != '/chat') {
       });
     }
       function enablecSpl() {
-        csplBox();
         var enable_cspl = "yes";
         $.ajax({
         url: 'toggle_cspl.php',
@@ -416,12 +281,6 @@ if($u_siteloc != '/chat') {
           $("#onlupd").html(d);
         });
       };
-      function stopTyping() {
-        //$.get("typing_stop.php", function(d) {
-          //$("#typingstop").html(d);
-        //});
-      };
-      //setInterval('stopTyping()', 10000);
       function more(id) {
         var e = document.getElementById(id);
         if(e.style.display == '') {
@@ -431,17 +290,6 @@ if($u_siteloc != '/chat') {
         else {
           e.style.display = '';
           document.getElementById('chat_more').className = "fa fa-times";
-        }
-      }
-      function moreX(id) {
-        var e = document.getElementById(id);
-        if(e.style.display == '') {
-          e.style.display = 'none';
-          document.getElementById('chat_more').className = "fa fa-plus";
-        }
-        else {
-          e.style.display = '';
-          document.getElementById('chat_more').className = "fa fa-plus";
         }
       }
       function sendBox(num) {
@@ -463,13 +311,13 @@ if($u_siteloc != '/chat') {
           $("#chat").html(d);
         });
       }
-      setInterval('upChat()', 3000);
+      setInterval('upChat()', 1000);
       function upOnline() {
         $.get("online.php", function(d) {
           $("#online").html(d);
         });
       }
-      setInterval('upOnline()', 3000);
+      setInterval('upOnline()', 1000);
       $("#chats_form").submit(function(e){
         e.preventDefault();
         if($("input[name=msg]").val().trim() == "")
@@ -477,30 +325,12 @@ if($u_siteloc != '/chat') {
         $.post("send.php", {body: $("input[name=msg]").val(), submit: "send"}, function(data) {
           if(data != '') {
             upChat();
-            //stopTyping();
           }
           else {
             upChat();
-            //stopTyping();
           }
         });
         $("input[name=msg]").val("");
-      });
-
-
-      $("#pmchats_form").submit(function(e){
-        e.preventDefault();
-        if($("input[name=pmmsg]").val().trim() == "")
-        return;
-        $.post("pm_send.php", {pmbody: $("input[name=pmmsg]").val(), pmu: $("input[name=pmu]").val(), submit: "send"}, function(data) {
-          if(data != '') {
-            upChat();
-          }
-          else {
-            upChat();
-          }
-        });
-        $("input[name=pmmsg]").val("");
       });
       var form = document.forms.namedItem("imgUpl");
       form.addEventListener('change', function(ev) {
@@ -519,9 +349,9 @@ if($u_siteloc != '/chat') {
             var cht_pic = oReq.responseText;
             upChat();
             if (cht_pic != '')
-              document.getElementById('loader').innerHTML = "<i class='fa fa-image' aria-hidden='true'></i>";
+              document.getElementById('loader').innerHTML = "<i onclick='selectFile();' id='fPath' class='fa fa-paperclip fa-lg' aria-hidden='true'></i>";
             else
-              document.getElementById('loader').innerHTML = "<i class='fa fa-exclamation fa-lg' aria-hidden='true'></i>";
+              document.getElementById('loader').innerHTML = "<i onclick='selectFile();' id='fPath' class='fa fa-exclamation fa-lg' aria-hidden='true'></i>";
             form.reset();
           }
         };
@@ -551,9 +381,9 @@ if($u_siteloc != '/chat') {
             var cht_pic = oReq.responseText;
             upChat();
             if (cht_pic != '')
-              document.getElementById('vloader').innerHTML = "<i class='fa fa-film' aria-hidden='true'></i>";
+              document.getElementById('vloader').innerHTML = "<i onclick='selectVid();' id='vPath' class='fa fa-film' aria-hidden='true'></i>";
             else
-              document.getElementById('vloader').innerHTML = "<i class='fa fa-exclamation fa-lg' aria-hidden='true'></i>";
+              document.getElementById('vloader').innerHTML = "<i onclick='selectVid();' id='vPath' class='fa fa-exclamation fa-lg' aria-hidden='true'></i>";
             vform.reset();
           }
         };
