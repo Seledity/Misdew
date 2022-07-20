@@ -13,4 +13,4 @@ You will have to modify the code in many places to use your own keys for the upl
 
 This code isn't plug-n-play and will require some work. Feel free to use it however you wish. 
 
-The two .sql files in the root directory can be used to rebuild the two databases the site uses- mdv5.sql (the site) and uploads.sql (cloud)
+The two .sql files in the root directory can be used to rebuild the two MySQL databases the site uses- mdv5.sql (the site) and uploads.sql (cloud)
