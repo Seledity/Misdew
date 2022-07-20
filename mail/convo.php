@@ -1,8 +1,14 @@
 <?php
 $this_page = "mail";
+$this_sub_page = "mail_convo";
 require_once("../inc/conx.php");
 if($logged_in == false) {
   header("location: /");
+  exit();
+}
+$cv_uqid = safe($_GET['i']);
+if(mysqli_num_rows(mysqli_query($conx, "SELECT id FROM mail_memb WHERE uqid='$cv_uqid' && uid='$u_uid'")) == '0') {
+  header("location: /mail");
   exit();
 }
 #   #   #   #   #   #   #
@@ -42,8 +48,18 @@ if($u_siteloc != '/mail') {
     color: <?php echo $tdcolor; ?> !important;
   }
   </style>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-81238250-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-81238250-2');
+</script>
+
 </head>
-<body>
+<body onload="goOnline()">
   <center>
     <?php
     $back_button = true;
@@ -57,8 +73,8 @@ if($u_siteloc != '/mail') {
           <td id="messagesTab" onclick="toMessages()" class="action_bar_tab" style="border-bottom: 1px solid #fff;">
             Messages
           </td>
-          <td id="friendsTab" onclick="toFriends()" class="action_bar_tab">
-            Friends
+          <td id="membersTab" onclick="toMembers()" class="action_bar_tab">
+            Members
           </td>
           <td id="settingsTab" onclick="toSettings()" class="action_bar_tab">
             Settings
@@ -68,52 +84,51 @@ if($u_siteloc != '/mail') {
     </div> <br>
     <?php //require_once("../inc/load_alerts.php"); ?>
     <div id="action_bar_page">
-      <?php require_once("messages.php"); ?>
+      <?php require_once("convo_messages.php"); ?>
     </div>
     <?php
-    echo "<br>";
-    echo "<span style=\"font-family: 'Dosis', sans-serif; color: #808080; font-size: 12px;\">Mail is not private or secure. Your messages can/may be read at any time. <br> They are stored in plaintext on our server. <br></span>";
     require_once("../inc/footer.php");
     ?>
   </center>
   <script>
+  function goOnline() {
+    $.get("online_upd.php?i=<?php echo $cv_uqid; ?>", function(d) {
+      $("#onlupd").html(d);
+    });
+  };
   function toMessages() {
+    goOnline();
     document.getElementById('messagesTab').innerHTML = "Messages..";
-    $.get("messages.php", function(d) {
+    $.get("convo_messages.php?i=<?php echo $cv_uqid; ?>", function(d) {
       document.getElementById('messagesTab').innerHTML = "Messages";
       document.getElementById("messagesTab").style.borderBottom = '1px solid #fff';
-      document.getElementById("friendsTab").style.borderBottom = 'none';
+      document.getElementById("membersTab").style.borderBottom = 'none';
       document.getElementById("settingsTab").style.borderBottom = 'none';
       $("#action_bar_page").html(d);
     });
   }
-  function toFriends() {
-    document.getElementById('friendsTab').innerHTML = "Friends..";
-    $.get("friends.php", function(d) {
-      document.getElementById('friendsTab').innerHTML = "Friends";
+  function toMembers() {
+    goOnline();
+    document.getElementById('membersTab').innerHTML = "Members..";
+    $.get("convo_members.php?i=<?php echo $cv_uqid; ?>", function(d) {
+      document.getElementById('membersTab').innerHTML = "Members";
       document.getElementById("messagesTab").style.borderBottom = 'none';
-      document.getElementById("friendsTab").style.borderBottom = '1px solid #fff';
+      document.getElementById("membersTab").style.borderBottom = '1px solid #fff';
       document.getElementById("settingsTab").style.borderBottom = 'none';
       $("#action_bar_page").html(d);
     });
   }
   function toSettings() {
+    goOnline();
     document.getElementById('settingsTab').innerHTML = "Settings..";
-    $.get("settings.php", function(d) {
+    $.get("convo_settings.php?i=<?php echo $cv_uqid; ?>", function(d) {
       document.getElementById('settingsTab').innerHTML = "Settings";
       document.getElementById("messagesTab").style.borderBottom = 'none';
-      document.getElementById("friendsTab").style.borderBottom = 'none';
+      document.getElementById("membersTab").style.borderBottom = 'none';
       document.getElementById("settingsTab").style.borderBottom = '1px solid #fff';
       $("#action_bar_page").html(d);
     });
   }
   </script>
-  <script>function expand(id) {
-    var e = document.getElementById(id);
-    if(e.style.display == 'block')
-    e.style.display = 'none';
-    else
-    e.style.display = 'block';
-  }</script>
 </body>
 </html>
