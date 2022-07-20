@@ -1,7 +1,36 @@
 <?php
+session_start();
 require_once("../inc/conx.php");
 if($logged_in == true) {
   header("location: /");
+  exit();
+}
+# POST DATA
+$resetid_p = safe($_GET['k']);
+if($resetid_p) {
+  $cs = mysqli_query($conx, "SELECT tstamp,uqid,username,email_secure FROM forgot_password WHERE uqid='$resetid_p'");
+  $ccnt = mysqli_num_rows($cs);
+  if($ccnt == '0') {
+    $_SESSION['m5'] = "ef_hef";
+    header("location: /forgot");
+    exit();
+  }
+  $crs = mysqli_fetch_assoc($cs);
+  $rs_tstamp = $crs['tstamp'];
+  $rs_uqid = $crs['uqid'];
+  $rs_username = $crs['username'];
+  $rs_email = $crs['email_secure'];
+  # MAKE SURE LINK HASN'T REACHED ONE HOUR EXPIRE LIMIT
+  $tttstamp = $rs_tstamp + 3600;
+  if($tstamp >= $tttstamp) {
+    $dp = mysqli_query($conx, "DELETE FROM forgot_password WHERE email_secure='$rs_email'");
+    $_SESSION['m5'] = "ef_hef";
+    header("location: /forgot");
+    exit();
+  }
+}
+else {
+  header("location: /forgot");
   exit();
 }
 ?>
@@ -22,46 +51,33 @@ if($logged_in == true) {
 <body>
   <center>
     <?php
-    session_start();
     $back_button = true;
     $linebreak = true;
     require_once("../inc/header.php");
     // possible session messages
     if (isset($_SESSION['m3']) == 'all_req') {
-      echo "<div class=\"error_msg\">You must enter an email.</div> <br>";
+      echo "<div class=\"error_msg\">All fields are required.</div> <br>";
       unset($_SESSION['m3']);
     }
-    elseif (isset($_SESSION['m']) == 'generr') {
-      echo "<div class=\"error_msg\">There was an error.</div> <br>";
+    elseif (isset($_SESSION['m']) == 'p_dnm') {
+      echo "<div class=\"error_msg\">The passwords you entered did not match.</div> <br>";
       unset($_SESSION['m']);
     }
-    elseif (isset($_SESSION['m2']) == 'e_inv') {
-      echo "<div class=\"error_msg\">The email you entered is not in a valid format.</div> <br>";
-      unset($_SESSION['m2']);
-    }
-    elseif (isset($_SESSION['m4']) == 'em_ss') {
-      echo "<div class=\"error_msg\">We sent you an email.</div> <br>";
-      unset($_SESSION['m4']);
-    }
-    elseif (isset($_SESSION['m5']) == 'ef_hef') {
-      echo "<div class=\"error_msg\">That reset link is invalid. Request a new one.</div> <br>";
-      unset($_SESSION['m5']);
-    }
     else {
-      echo "<div class=\"error_msg\">Enter the credentials associated with your account.
-      <br> We will send you an email.</div> <br>";
+      echo "<div class=\"error_msg\">Enter a new password for your account.</div> <br>";
     }
+    session_destroy();
     ?>
-    <form action="forgot.php" method="post" autocomplete="off">
+    <form action="r.php?k=<?php echo $resetid_p; ?>" method="post" autocomplete="off">
       <table class="form_tble">
         <tr>
           <td>
-            <input id="access" name="username" type="text" placeholder="username" class="form_input">
+            <input name="newpass" type="password" placeholder="password" class="form_input">
           </td>
         </tr>
         <tr>
           <td>
-            <input id="access" name="email" type="text" placeholder="email" class="form_input">
+            <input name="confnewpass" type="password" placeholder="confirm password" class="form_input">
           </td>
         </tr>
         <tr>
@@ -78,7 +94,6 @@ if($logged_in == true) {
         </td>
       </tr>
     </table> <br>
-    <span style="font-family: 'Dosis', sans-serif; color: #808080; font-size: 12px;">Still need help? Send an email to <b>me@justa.us</b></span> <br>
     <?php
     require_once("../inc/footer.php");
     ?>
