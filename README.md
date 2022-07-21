@@ -11,6 +11,6 @@ There are a variety of "apps" such as Canvas [user profiles], Feed [public statu
 
 You will have to modify the code in many places to use your own keys for the upl.justa.us uploader and edit passwords for databases/etc. Play around with the code and look through it af. It isn't the most efficient but it works kinda. Also, by default the account creation "/join" requires an email. You will have to configure the email sending for your server in order for verification emails to be sent to users.
 
-This code isn't plug-n-play and will require some work. Feel free to use it however you wish. 
+This code isn't plug-n-play and will require some work. Also, some files and directories aren't even used so GL. Feel free to use it however you wish. 
 
 The two .sql files in the root directory can be used to rebuild the two MySQL databases the site uses- mdv5.sql (the site) and uploads.sql (cloud)
