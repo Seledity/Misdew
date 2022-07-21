@@ -5,8 +5,14 @@ if($logged_in == false) {
   header("location: /");
   exit();
 }
-if($u_chatdark_def == 'yes'){
-  header("location: /chat/dark.php");
+if($chat_dark == "no") {
+  echo "You do not own Dark Mode for Chat. <br> You can purchase it here. <br> Cost: 50.00 MDF <br><br>";
+  if($u_funds >= 50) {
+    echo "<a onclick=\"return confirm('Are you sure?');\" href=\"buy-dark.php?t=$u_token\">BUY NOW</a>";
+  }
+  else {
+    echo "<a href=\"/chat\">YOU DO NOT HAVE ENOUGH MDF <br><br> TAP TO GO BACK</a>";
+  }
   exit();
 }
 // update online time
@@ -19,12 +25,6 @@ if($u_siteloc != '/chat') {
   mysqli_query($conx, "UPDATE accounts SET site_locdesc='$loc_desc' WHERE uid='$u_uid'");
   mysqli_query($conx, "UPDATE accounts SET site_locurl='/chat' WHERE uid='$u_uid'");
 }
-if($chat_dark == 'yes') {
-  $darkdidbuy = "switch to";
-}
-else {
-  $darkdidbuy = "buy";
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,7 +35,7 @@ else {
   <meta name="keywords" content="Misdew, MD, Social, Network, Communication, 3DS, DSi, Nintendo">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google" value="notranslate">
-  <meta name="theme-color" content="<?php echo $meta_theme_color; ?>">
+  <meta name="theme-color" content="#000">
   <?php
   if($css_type == "sheet") {
     echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$g_sheet\">";
@@ -48,17 +48,77 @@ else {
   <link rel="icon" type="image/png" href="/img/favicon.png">
   <link rel="apple-touch-icon" href="/img/logo.png">
   <style type="text/css">
-  #mdLink {
-    color: #fff !important;
-  }
+  ::-webkit-input-placeholder {
+  color: #333333;
+}
+:-moz-placeholder {
+  color: #333333;
+  opacity: 1;
+}
+::-moz-placeholder {
+  color: #333333;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  color: #333333;
+}
+#mdLink {
+  color: #333 !important;
+}
   body {
-    background-color: <?php echo $bgcolor; ?>;
-  }
-  #header_tds {
-    color: <?php echo $tdcolor; ?> !important;
+    background-color: #000 !important;
   }
   #vPath {
-    color: #fff !important;
+    color: #333;
+  }
+  #fPath {
+    color: #333;
+  }
+  #color_go {
+    color: #b2b2b2;
+  }
+  #color_slow {
+    color: #7f7f7f;
+  }
+  #color_dead {
+    color: #4c4c4c;
+  }
+  .header {
+    background-color: #000 !important;
+    border-bottom: 1px solid #333333;
+  }
+  #header_tds {
+    color: #333333 !important;
+  }
+  .chatd_send {
+    background-color: #000 !important;
+    border: 1px solid #333333;
+  }
+  .chat_input {
+    background-color: #000 !important;
+    color: #7f7f7f !important;
+  }
+  .chat_btn {
+    background-color: #000 !important;
+    color: #4c4c4c !important;
+    border: 1px solid #4c4c4c !important;
+  }
+  #chat {
+    background-color: #000 !important;
+    border: 1px solid #333333;
+  }
+  #show {
+    background-color: #000 !important;
+    border: 1px solid #333333;
+  }
+  .online_list {
+    color: #7f7f7f !important;
+  }
+  .onl_username {
+    color: #7f7f7f !important;
+  }
+  .darkmd {
+    color: #7f7f7f !important;
   }
   </style>
 </head>
@@ -68,105 +128,14 @@ else {
     $back_button = true;
     $linebreak = true;
     $alerts = true;
-    require_once("../inc/header.php");
-    ?>
-    <?php
-    echo "<div id=\"csplit_hidden\" style=\"display: none;\"><div id=\"cspl_update\">";
-    if($u_csplown == 'yes' && $u_csplit == 'on') {
-      echo "<div id=\"cspl_upd\" style=\"width: 80%; max-width: 350px;\">
-        no changes detected
-      </div>
-      <table class=\"cspl_table\">
-        <tr>
-          <td class=\"cspl_title\">
-            cSplit Configuration
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span class=\"cspl_desc\">The splitting of your username must be exactly the same as your username. It is case sensitive.</span>
-          </td>
-        </tr>
-        <tr>
-          <td style=\"padding: 4px; padding-bottom: 0px;\">
-            <span id=\"1cspl_nchange1\" style=\"color: $u_cspcolor1 !important; font-weight: bold;\">$u_cspname1</span><span id=\"1cspl_nchange2\" style=\"color: $u_cspcolor2 !important; font-weight: bold;\">$u_cspname2</span><span id=\"1cspl_nchange3\" style=\"color: $u_cspcolor3 !important; font-weight: bold;\">$u_cspname3</span>
-            to
-            <span id=\"cspl_nchange1\" style=\"color: $u_cspcolor1 !important; font-weight: bold;\">$u_cspname1</span><span id=\"cspl_nchange2\" style=\"color: $u_cspcolor2 !important; font-weight: bold;\">$u_cspname2</span><span id=\"cspl_nchange3\" style=\"color: $u_cspcolor3 !important; font-weight: bold;\">$u_cspname3</span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span class=\"cspl_desc\">Username Coloration</span>
-            <input onkeypress=\"saveColor('1')\" onkeyup=\"saveColor('1')\" autocomplete=\"off\" type=\"text\" id=\"csplitc_1\" name=\"csplitc_1\" class=\"cspl_input\" placeholder=\"First Color [color/hex/rgb]\" value=\"$u_cspcolor1\"> <br>
-            <input onkeypress=\"saveColor('2')\" onkeyup=\"saveColor('2')\" autocomplete=\"off\" type=\"text\" id=\"csplitc_2\" name=\"csplitc_2\" class=\"cspl_input\" placeholder=\"Second Color [color/hex/rgb]\" value=\"$u_cspcolor2\"> <br>
-            <input onkeypress=\"saveColor('3')\" onkeyup=\"saveColor('3')\" autocomplete=\"off\" type=\"text\" id=\"csplitc_3\" name=\"csplitc_3\" class=\"cspl_input\" placeholder=\"Third Color [color/hex/rgb]\" value=\"$u_cspcolor3\"> <br>
-            <span class=\"cspl_desc\">Username Splitting</span>
-            <input onkeypress=\"saveName('1')\" onkeyup=\"saveName('1')\" autocomplete=\"off\" type=\"text\" id=\"csplitn_1\" name=\"csplitn_1\" class=\"cspl_input\" placeholder=\"First Split\" value=\"$u_cspname1\"> <br>
-            <input onkeypress=\"saveName('2')\" onkeyup=\"saveName('2')\" autocomplete=\"off\" type=\"text\" id=\"csplitn_2\" name=\"csplitn_2\" class=\"cspl_input\" placeholder=\"Second Split\" value=\"$u_cspname2\"> <br>
-            <input onkeypress=\"saveName('3')\" onkeyup=\"saveName('3')\" autocomplete=\"off\" type=\"text\" id=\"csplitn_3\" name=\"csplitn_3\" class=\"cspl_input\" placeholder=\"Third Split\" value=\"$u_cspname3\"> <br>
-          </td>
-        </tr>
-      </table>
-      <table class=\"cspl_table\" style=\"padding-bottom: 4px;\">
-        <tr>
-          <td onclick=\"updcSpl();\">
-            <div class=\"cspl_upd\">Update</div>
-          </td>
-          <td onclick=\"disablecSpl();\">
-            <div class=\"cspl_disable\">Disable</div>
-          </td>
-        </tr>
-      </table> <br>";
-    }
-    elseif($u_csplown == 'yes' && $u_csplit == 'off') {
-      echo "<table class=\"cspl_table\">
-        <tr>
-          <td class=\"cspl_title\">
-            cSplit
-          </td>
-          </tr>
-          <td>
-            <span class=\"cspl_desc\">You own cSplit, but it is currently disabled for your account. You can enable it below.</span>
-          </td>
-          </tr>
-        </table>
-        <table class=\"cspl_table\" style=\"padding-bottom: 4px;\">
-          <tr>
-            <td onclick=\"enablecSpl();\">
-              <center><div class=\"cspl_enable\">Enable</div></center>
-            </td>
-          </tr>
-        </table> <br>";
-    }
-    elseif($u_csplown == 'no') {
-      $u_totalc = number_format($u_cmsgs);
-      echo "<table class=\"cspl_table\">
-        <tr>
-          <td class=\"cspl_title\">
-            cSplit
-          </td>
-          </tr>
-          <td>
-            <span class=\"cspl_desc\">This feature is available only to users who have sent a total of 1,000 chat messages. So far, you have sent $u_totalc. Once you have reached that limit, you will be able to purchase cSplit for $5.00 using the command below. Remember, spamming or flooding to meet this limit is against the rules.</span>
-          </td>
-          </tr>
-        </table>
-        <table class=\"cspl_table\" style=\"padding-bottom: 4px;\">
-          <tr>
-            <td class=\"cspl_cmd\">
-              <center>/cspl buy $u_username</center>
-            </td>
-          </tr>
-        </table> <br>";
-    }
-    echo "</div></div>";
+    require_once("../inc/header-dark.php");
     ?>
     <div class="chatd_send">
       <form id="chats_form" autocomplete="off">
-        <span class="noselect"><i onclick="stopTyping();more('show');goOnline();" class="fa fa-plus" aria-hidden="true" id="chat_more"></i></span>
+        <span class="noselect"><i onclick="stopTyping();more('show');goOnline();" class="fa fa-plus" aria-hidden="true" id="chat_more" style="color: #333333 !important;"></i></span>
         <input onkeypress="isTyping();" onkeyup="isTyping();" name="msg" id="result" class="chat_input" type="text" placeholder="type something..." style="width: 50%;">
-        <span id="loader"><i onclick="selectFile();" id="fPath" class="fa fa-paperclip fa-lg" aria-hidden="true"></i></span> &nbsp;
-        <span id="vloader"><i onclick="var log_conf=confirm('Upload a video? \n MP4 Files Only');if(log_conf == true){selectVid();};" id="vPath" class="fa fa-film" aria-hidden="true" style="color: #fff;"></i></span>
+        <span id="loader"><i onclick="selectFile();" id="fPath" class="fa fa-paperclip fa-lg" aria-hidden="true" style="color: #333333 !important;"></i></span> &nbsp;
+        <span id="vloader"><i onclick="var log_conf=confirm('Upload a video? \n MP4 Files Only');if(log_conf == true){selectVid();};" id="vPath" class="fa fa-film" aria-hidden="true" style="color: #333;"></i></span>
         <input class="chat_btn" type="submit" value="send">
       </form>
     </div>
@@ -175,21 +144,27 @@ else {
         <input id="fBrowse" name="img" type="file" style="display: none;">
         <div id="online">
         <span class="online_list">
-          <?php require("online.php"); ?>
+          <?php require("online-dark.php"); ?>
       </div>
         </span>
       </form>
       <form id="vidUpl" action="vid_upload.php" enctype="multipart/form-data" method="post">
         <input id="vBrowse" name="vid" type="file" style="display: none;">
       </form>
-      <center onclick="window.location='dark.php';" style="font-size: 12px; font-weight: bold;">Tap here to <?php echo $darkdidbuy; ?> Dark Mode.</center>
-      <br><center onclick="fullscmode();" style="font-size: 12px; font-weight: bold;">Tap here to enter Full Screen.</center>
+      <?php
+      if($u_chatdark_def == 'no') {
+        echo "<center onclick=\"window.location='/chat';\" style=\"color: #7f7f7f;font-size: 12px; font-weight: bold;\">Tap here to switch to Classic Mode.</center>";
+      }
+      else {
+        echo "<center onclick=\"window.location='/settings';\" style=\"color: #7f7f7f;font-size: 12px; font-weight: bold;\">Disable Forced Dark Mode to switch to Classic Mode.</center>";
+      }
+      echo "<br><center onclick=\"fullscmode();\" style=\"color: #7f7f7f;font-size: 12px; font-weight: bold;\">Tap here to enter Full Screen.</center>";
+      ?>
     </div>
-    <div style="font-size: 8px; max-width: 500px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
+    <div style="font-size: 8px; max-width: 500px;width: 95%; background-color: #333333; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
     &nbsp;
     </div>
-
-    <div id="sticker_bar" style="display: none; overflow: scroll; font-size: 12px; max-width: 500px;width: 95%; background-color: #fff; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
+    <div id="sticker_bar" style="display: none; overflow: scroll; font-size: 12px; max-width: 500px;width: 95%; background-color: #000; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
       <nobr>
         <img onclick="sendSticky('pepe');" src="/img/stickers/pepe.png" alt="" style="height: 50px; width: auto;">
         <img onclick="sendSticky('pepe-punch');" src="/img/stickers/pepe-punch.png" alt="" style="height: 50px; width: auto;">
@@ -211,36 +186,30 @@ else {
         <img onclick="sendSticky('easter-gif');" src="/img/stickers/easter-gif.gif" alt="" style="height: 50px; width: auto;">
       </nobr>
     </div>
-    <div id="sticker_bar_xtra" style="display: none; font-size: 8px; max-width: 500px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
+    <div id="sticker_bar_xtra" style="display: none; font-size: 8px; max-width: 500px;width: 95%; background-color: #333333; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
     &nbsp;
     </div>
     <div id="chat">
-      <?php require("messages.php"); ?>
+      <?php require("dark-messages.php"); ?>
     </div>
     <div id="typingstop" style="display: none"></div>
-      <script src="https://misdew.com/jquery.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
       <script>
       function isTyping() {
-        //var token = "<?php echo $u_token; ?>";
-        //var typing = "yes";
-          //$.ajax({
-          //url: 'typing.php',
-          //type: 'POST',
-          //data: { token: token, typing: typing },
-          //});
-      }
-      function sendSticky(i) {
         var token = "<?php echo $u_token; ?>";
-        var msg = "Send the " + i + " sticker?";
-        if(confirm(msg)) {
+        var typing = "yes";
           $.ajax({
-          url: 'send_sticky.php',
+          url: 'typing.php',
           type: 'POST',
-          data: { stickyid: i, token: token },
+          data: { token: token, typing: typing },
           });
-        }
-
       }
+      function stopTyping() {
+        $.get("typing_stop.php", function(d) {
+          $("#typingstop").html(d);
+        });
+      };
+      setInterval('stopTyping()', 10000);
       function fullscmode() {
       addEventListener("click", function() {
           var
@@ -254,7 +223,6 @@ else {
       });
     }
       function enablecSpl() {
-        csplBox();
         var enable_cspl = "yes";
         $.ajax({
         url: 'toggle_cspl.php',
@@ -279,6 +247,18 @@ else {
         $.get("csplit_box.php", function(d) {
           $("#cspl_update").html(d);
         });
+      }
+      function sendSticky(i) {
+        var token = "<?php echo $u_token; ?>";
+        var msg = "Send the " + i + " sticker?";
+        if(confirm(msg)) {
+          $.ajax({
+          url: 'send_sticky.php',
+          type: 'POST',
+          data: { stickyid: i, token: token },
+          });
+        }
+
       }
       function updcSpl() {
         var split_color1 = $("#csplitc_1").val();
@@ -330,12 +310,6 @@ else {
           $("#onlupd").html(d);
         });
       };
-      function stopTyping() {
-        //$.get("typing_stop.php", function(d) {
-          //$("#typingstop").html(d);
-        //});
-      };
-      //setInterval('stopTyping()', 10000);
       function more(id) {
         var e = document.getElementById(id);
         if(e.style.display == '') {
@@ -373,13 +347,13 @@ else {
         document.getElementById('vPath').value = document.getElementById('vBrowse').value;
       }
       function upChat() {
-        $.get("messages.php", function(d) {
+        $.get("dark-messages.php", function(d) {
           $("#chat").html(d);
         });
       }
       setInterval('upChat()', 3000);
       function upOnline() {
-        $.get("online.php", function(d) {
+        $.get("online-dark.php", function(d) {
           $("#online").html(d);
         });
       }
@@ -391,11 +365,11 @@ else {
         $.post("send.php", {body: $("input[name=msg]").val(), submit: "send"}, function(data) {
           if(data != '') {
             upChat();
-            //stopTyping();
+            stopTyping();
           }
           else {
             upChat();
-            //stopTyping();
+            stopTyping();
           }
         });
         $("input[name=msg]").val("");
@@ -426,12 +400,6 @@ else {
         oReq.send(oData);
         ev.preventDefault();
       }, false);
-
-
-
-
-
-
       var vform = document.forms.namedItem("vidUpl");
       vform.addEventListener('change', function(ev) {
         var oOutput = document.querySelector("div"),

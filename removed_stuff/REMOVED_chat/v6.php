@@ -68,7 +68,7 @@ else {
     $back_button = true;
     $linebreak = true;
     $alerts = true;
-    require_once("../inc/header.php");
+    require_once("../inc/header-v6.php");
     ?>
     <?php
     echo "<div id=\"csplit_hidden\" style=\"display: none;\"><div id=\"cspl_update\">";
@@ -161,13 +161,13 @@ else {
     }
     echo "</div></div>";
     ?>
-    <div class="chatd_send">
+    <div class="chatd_send" style="box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
       <form id="chats_form" autocomplete="off">
-        <span class="noselect"><i onclick="stopTyping();more('show');goOnline();" class="fa fa-plus" aria-hidden="true" id="chat_more"></i></span>
-        <input onkeypress="isTyping();" onkeyup="isTyping();" name="msg" id="result" class="chat_input" type="text" placeholder="type something..." style="width: 50%;">
+        <span class="noselect"><i onclick="more('show');goOnline();" class="fa fa-plus" aria-hidden="true" id="chat_more"></i></span>
+        <input name="msg" id="result" class="chat_input" type="text" placeholder="type something...">
         <span id="loader"><i onclick="selectFile();" id="fPath" class="fa fa-paperclip fa-lg" aria-hidden="true"></i></span> &nbsp;
         <span id="vloader"><i onclick="var log_conf=confirm('Upload a video? \n MP4 Files Only');if(log_conf == true){selectVid();};" id="vPath" class="fa fa-film" aria-hidden="true" style="color: #fff;"></i></span>
-        <input class="chat_btn" type="submit" value="send">
+        <input class="chat_btn" type="submit" value="send" style="box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);">
       </form>
     </div>
     <div id="show" class="chat_dismore" style="display: none;">
@@ -188,59 +188,11 @@ else {
     <div style="font-size: 8px; max-width: 500px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
     &nbsp;
     </div>
-
-    <div id="sticker_bar" style="display: none; overflow: scroll; font-size: 12px; max-width: 500px;width: 95%; background-color: #fff; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
-      <nobr>
-        <img onclick="sendSticky('pepe');" src="/img/stickers/pepe.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-punch');" src="/img/stickers/pepe-punch.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-gun1');" src="/img/stickers/pepe-gun1.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-mk');" src="/img/stickers/pepe-mk.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-sad1');" src="/img/stickers/pepe-sad1.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-weetawd');" src="/img/stickers/pepe-weetawd.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-HAHA');" src="/img/stickers/pepe-HAHA.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-eyes');" src="/img/stickers/pepe-eyes.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-k');" src="/img/stickers/pepe-k.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('pepe-grog');" src="/img/stickers/pepe-grog.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('withered');" src="/img/stickers/withered.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('wojak');" src="/img/stickers/wojak.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('lock');" src="/img/stickers/lock.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('easter-pepe');" src="/img/stickers/easter-pepe.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('ricardo-smile');" src="/img/stickers/ricardo-smile.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('ricardo');" src="/img/stickers/ricardo.png" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('cow-gif');" src="/img/stickers/yak.gif" alt="" style="height: 50px; width: auto;">
-        <img onclick="sendSticky('easter-gif');" src="/img/stickers/easter-gif.gif" alt="" style="height: 50px; width: auto;">
-      </nobr>
+    <div id="chat" style="box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
+      <?php require("v6-messages.php"); ?>
     </div>
-    <div id="sticker_bar_xtra" style="display: none; font-size: 8px; max-width: 500px;width: 95%; background-color: #e5365a; padding: 0px; padding-top: 0px; padding-bottom: 0px;">
-    &nbsp;
-    </div>
-    <div id="chat">
-      <?php require("messages.php"); ?>
-    </div>
-    <div id="typingstop" style="display: none"></div>
-      <script src="https://misdew.com/jquery.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
       <script>
-      function isTyping() {
-        //var token = "<?php echo $u_token; ?>";
-        //var typing = "yes";
-          //$.ajax({
-          //url: 'typing.php',
-          //type: 'POST',
-          //data: { token: token, typing: typing },
-          //});
-      }
-      function sendSticky(i) {
-        var token = "<?php echo $u_token; ?>";
-        var msg = "Send the " + i + " sticker?";
-        if(confirm(msg)) {
-          $.ajax({
-          url: 'send_sticky.php',
-          type: 'POST',
-          data: { stickyid: i, token: token },
-          });
-        }
-
-      }
       function fullscmode() {
       addEventListener("click", function() {
           var
@@ -254,7 +206,6 @@ else {
       });
     }
       function enablecSpl() {
-        csplBox();
         var enable_cspl = "yes";
         $.ajax({
         url: 'toggle_cspl.php',
@@ -330,12 +281,6 @@ else {
           $("#onlupd").html(d);
         });
       };
-      function stopTyping() {
-        //$.get("typing_stop.php", function(d) {
-          //$("#typingstop").html(d);
-        //});
-      };
-      //setInterval('stopTyping()', 10000);
       function more(id) {
         var e = document.getElementById(id);
         if(e.style.display == '') {
@@ -345,17 +290,6 @@ else {
         else {
           e.style.display = '';
           document.getElementById('chat_more').className = "fa fa-times";
-        }
-      }
-      function moreX(id) {
-        var e = document.getElementById(id);
-        if(e.style.display == '') {
-          e.style.display = 'none';
-          document.getElementById('chat_more').className = "fa fa-plus";
-        }
-        else {
-          e.style.display = '';
-          document.getElementById('chat_more').className = "fa fa-plus";
         }
       }
       function sendBox(num) {
@@ -373,17 +307,17 @@ else {
         document.getElementById('vPath').value = document.getElementById('vBrowse').value;
       }
       function upChat() {
-        $.get("messages.php", function(d) {
+        $.get("v6-messages.php", function(d) {
           $("#chat").html(d);
         });
       }
-      setInterval('upChat()', 3000);
+      setInterval('upChat()', 1000);
       function upOnline() {
         $.get("online.php", function(d) {
           $("#online").html(d);
         });
       }
-      setInterval('upOnline()', 5000);
+      setInterval('upOnline()', 1000);
       $("#chats_form").submit(function(e){
         e.preventDefault();
         if($("input[name=msg]").val().trim() == "")
@@ -391,11 +325,9 @@ else {
         $.post("send.php", {body: $("input[name=msg]").val(), submit: "send"}, function(data) {
           if(data != '') {
             upChat();
-            //stopTyping();
           }
           else {
             upChat();
-            //stopTyping();
           }
         });
         $("input[name=msg]").val("");
